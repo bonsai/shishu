@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>genkou anim — WHITEの詩（自動ルート）</title>
+<style>
+*{box-sizing:border-box}
+:root{--paper:#fffdf7;--ink:#171717;--line:#8f877b;--bg:#eeeae2}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+body{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{padding:12px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+h1{font-size:15px;margin:0 6px 0 0;font-weight:600}
+button{background:#2b2b2b;color:#eee;border:1px solid #555;border-radius:999px;padding:6px 13px;font-size:13px;cursor:pointer}
+button.ghost{background:#fff;color:#222;border-color:#bbb}
+label{font-size:12px;color:#555;display:flex;gap:6px;align-items:center}
+#layoutInfo{font-size:12px;color:#555}
+.paper-wrap{padding:6px 10px 30px;overflow:auto}
+.paper{margin:0 auto;background:var(--paper);box-shadow:0 3px 18px #0002}
+.grid{display:grid;border:0.3mm solid var(--line)}
+.cell{display:flex;align-items:center;justify-content:center;border-left:0.2mm solid var(--line);border-top:0.2mm solid var(--line);font-family:"Noto Serif JP","Yu Mincho",serif;overflow:hidden}
+.cell span{opacity:0}
+.cell.on span{animation:ink .45s ease-out forwards}
+@keyframes ink{from{opacity:0;transform:translateY(-12%) scale(1.12);filter:blur(.4mm)}to{opacity:1;transform:none;filter:none}}
+.panel{padding:0 14px 26px;max-width:200mm;margin:0 auto}
+.meta{font-size:12px;color:#666;line-height:1.7}
+@media print{header,.panel{display:none}.paper-wrap{padding:0}.paper{box-shadow:none}.cell span{opacity:1;animation:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>genkou anim / WHITEの詩</h1>
+  <button id="play">⏸ 止める</button>
+  <button id="restart" class="ghost">↺ 最初から</button>
+  <button id="all" class="ghost">一括表示</button>
+  <button id="prevS" class="ghost">← 前の枚</button>
+  <button id="nextS" class="ghost">次の枚 →</button>
+  <label>速さ <input id="speed" type="range" min="30" max="700" step="10" value="260"> <span id="speedVal">260ms/字</span></label>
+  <span id="layoutInfo"></span>
+</header>
+<main class="paper-wrap">
+  <div class="paper" id="paper"><div id="grid" class="grid" aria-label="原稿用紙"></div></div>
+</main>
+<section class="panel">
+  <div class="meta" id="note"></div>
+</section>
+
+<script type="application/json" id="poem-data">
+{
+  "id": "white-unnamed-poem-001",
+  "version": 2,
+  "title": null,
+  "author": "WHITE",
+  "form": "genkou-anim",
+  "text": "海馬は荒れに荒れ、ウミネコの声と津波が轟々と音を立てて押し寄せてくる。\n脳幹の森は風に煽られ、右とも左ともつかないほどに揺れながら震えている。\nビニールシートのような煎餅布団に包まり、災害の夜が明ければ、そこからやっと地獄が始まる。\n\n鳥についばまれるように瞼をこじ開ける。\n体が重い。痛い。呼吸が浅い。苦しい。\nいっそもう一度眠ろうと試み惰眠を貪ったが為すでに夕刻である。\nもう眠ることすら赦されない。\nスローモーションの速さで階段をひとつ、またひとつと踏み締めながら落ちてゆく。\nただの線になった足は、無機質な球のような僕の体を上手に支えきれない。\nふらつきよろめいた勢いのまま僕は、息を殺し、誰も居ないことを確認し、独りきりのリビングへ倒れ込んだ。\n\n何を食っても砂だ。\nソーセージも、目玉焼きも、期限切れの冷凍のうどんも、何を食っても砂だ。\n食欲も無いから食いきれない。　　　作：WHITE",
+  "lines": [
+    "海馬は荒れに荒れ、ウミネコの声と津波が轟々と音を立てて押し寄せてくる。",
+    "脳幹の森は風に煽られ、右とも左ともつかないほどに揺れながら震えている。",
+    "ビニールシートのような煎餅布団に包まり、災害の夜が明ければ、そこからやっと地獄が始まる。",
+    "",
+    "鳥についばまれるように瞼をこじ開ける。",
+    "体が重い。痛い。呼吸が浅い。苦しい。",
+    "いっそもう一度眠ろうと試み惰眠を貪ったが為すでに夕刻である。",
+    "もう眠ることすら赦されない。",
+    "スローモーションの速さで階段をひとつ、またひとつと踏み締めながら落ちてゆく。",
+    "ただの線になった足は、無機質な球のような僕の体を上手に支えきれない。",
+    "ふらつきよろめいた勢いのまま僕は、息を殺し、誰も居ないことを確認し、独りきりのリビングへ倒れ込んだ。",
+    "何を食っても砂だ。",
+    "ソーセージも、目玉焼きも、期限切れの冷凍のうどんも、何を食っても砂だ。",
+    "食欲も無いから食いきれない。",
+    "作：WHITE"
+  ],
+  "layout": {
+    "routing": "auto",
+    "lineBreak": "next-row",
+    "breakpointPx": 640,
+    "desktop": {
+      "cols": 20,
+      "rowsPerSheet": 20,
+      "cellMm": 10,
+      "label": "400字詰め原稿用紙"
+    },
+    "smartphone": {
+      "cols": 10,
+      "rowsPerSheet": 40,
+      "cell": "viewport-width/10",
+      "label": "スマホは横10文字"
+    }
+  },
+  "animation": {
+    "defaultSpeedMs": 260,
+    "sheetPauseMs": 1400
+  },
+  "computed": {
+    "desktop": {
+      "rows": 25,
+      "sheets": 2
+    },
+    "smartphone": {
+      "rows": 44,
+      "sheets": 2
+    }
+  },
+  "note": "v2（2026-11-10、ユーザーの指定「スマホなら10文字で横・自動ルート」）: 固定ページをやめ、lines を正本にして表示幅ごとに自動で組み直す。PC等は20文字×20行、スマホ（640px以下）は横10文字×40行。どちらも自動で2枚に収まる。原文の最終行末尾の「作：WHITE」は lines では独立行、text では原文どおり末尾に保持。"
+}
+</script>
+<script>
+const POEM = JSON.parse(document.querySelector("#poem-data").textContent);
+const grid = document.querySelector("#grid");
+const paper = document.querySelector("#paper");
+const layoutInfo = document.querySelector("#layoutInfo");
+const mq = matchMedia("(max-width: " + POEM.layout.breakpointPx + "px)");
+
+// 表示幅 → レイアウト決定（PC等: 20×20 / スマホ: 横10文字×40行）
+function currentLayout() {
+  return mq.matches ? POEM.layout.smartphone : POEM.layout.desktop;
+}
+
+// lines → セルの流れ（改行は次の行頭へ送る）。組版の正本はここ
+function toStream(lines, cols) {
+  const cells = [];
+  for (const line of lines) {
+    for (const ch of line) cells.push(ch);
+    const rest = cols - (cells.length % cols);
+    if (rest !== cols) { for (let i = 0; i < rest; i++) cells.push(""); }
+    else if (line.length === 0) { for (let i = 0; i < cols; i++) cells.push(""); }
+  }
+  return cells;
+}
+
+// 流れ → 枚（シート）分割 = 自動ルート
+let sheets = [], sheetIdx = 0, cols = 20, rowsPerSheet = 20;
+function route() {
+  const L = currentLayout();
+  cols = L.cols; rowsPerSheet = L.rowsPerSheet;
+  const stream = toStream(POEM.lines, cols);
+  sheets = [];
+  const per = cols * rowsPerSheet;
+  for (let i = 0; i < stream.length; i += per) {
+    const sheet = stream.slice(i, i + per);
+    while (sheet.length < per) sheet.push("");
+    sheets.push(sheet);
+  }
+  if (sheetIdx >= sheets.length) sheetIdx = sheets.length - 1;
+  layoutInfo.textContent = (mq.matches ? "スマホ: 横" : "PC: 横") + cols + "文字 × " + rowsPerSheet + "行 — " + (sheetIdx + 1) + "枚目 / " + sheets.length + "枚";
+}
+
+let timer = null, shown = 0, playing = false;
+function build() {
+  stop();
+  const cells = sheets[sheetIdx];
+  // 紙とマスの寸法: PCは10mmマス固定、スマホは画面幅いっぱいに10列
+  if (mq.matches) {
+    const w = Math.min(innerWidth - 20, 640);
+    paper.style.width = w + "px";
+    grid.style.gridTemplateColumns = "repeat(" + cols + ", " + (w / cols) + "px)";
+    grid.style.gridTemplateRows = "repeat(" + rowsPerSheet + ", " + (w / cols) + "px)";
+    grid.style.fontSize = (w / cols * 0.62) + "px";
+  } else {
+    paper.style.width = "200mm";
+    grid.style.gridTemplateColumns = "repeat(" + cols + ", 10mm)";
+    grid.style.gridTemplateRows = "repeat(" + rowsPerSheet + ", 10mm)";
+    grid.style.fontSize = "7.2mm";
+  }
+  grid.innerHTML = "";
+  for (const ch of cells) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    const span = document.createElement("span");
+    span.textContent = ch;
+    cell.appendChild(span);
+    grid.appendChild(cell);
+  }
+  shown = 0;
+  layoutInfo.textContent = (mq.matches ? "スマホ: 横" : "PC: 横") + cols + "文字 × " + rowsPerSheet + "行 — " + (sheetIdx + 1) + "枚目 / " + sheets.length + "枚";
+}
+function follow(cell) { // 書いているマスが画面外なら追随スクロール
+  const r = cell.getBoundingClientRect();
+  if (r.bottom > innerHeight - 8 || r.top < 60) cell.scrollIntoView({ block: "nearest" });
+}
+function step() {
+  const cells = sheets[sheetIdx];
+  while (shown < cells.length && !cells[shown]) shown++;
+  if (shown >= cells.length) {
+    stop();
+    if (sheetIdx < sheets.length - 1) setTimeout(() => { sheetIdx++; build(); play(); }, POEM.animation.sheetPauseMs);
+    return;
+  }
+  const cell = grid.children[shown];
+  cell.classList.add("on");
+  if (shown % 5 === 0) follow(cell);
+  shown++;
+}
+function play() {
+  if (playing) return;
+  playing = true;
+  document.querySelector("#play").textContent = "⏸ 止める";
+  timer = setInterval(step, Number(document.querySelector("#speed").value));
+}
+function stop() {
+  playing = false;
+  if (timer) clearInterval(timer);
+  timer = null;
+  document.querySelector("#play").textContent = "▶ 再生";
+}
+document.querySelector("#play").onclick = () => { playing ? stop() : play(); };
+document.querySelector("#restart").onclick = () => { sheetIdx = 0; build(); play(); };
+document.querySelector("#all").onclick = () => { stop(); for (const c of grid.children) c.classList.add("on"); shown = sheets[sheetIdx].length; };
+document.querySelector("#prevS").onclick = () => { if (sheetIdx > 0) { sheetIdx--; build(); } };
+document.querySelector("#nextS").onclick = () => { if (sheetIdx < sheets.length - 1) { sheetIdx++; build(); play(); } };
+document.querySelector("#speed").oninput = e => {
+  document.querySelector("#speedVal").textContent = e.target.value + "ms/字";
+  if (playing) { const was = true; stop(); if (was) play(); }
+};
+// 画面幅がブレークポイントを跨いだら組み直す（自動ルート）
+let lastMobile = mq.matches;
+addEventListener("resize", () => {
+  if (mq.matches !== lastMobile) { lastMobile = mq.matches; route(); sheetIdx = 0; build(); play(); }
+});
+
+document.querySelector("#note").textContent =
+  "中身はJSON（poems/white-001.json と同内容を埋め込み）。lines を正本にして、表示幅ごとに自動で組み直します：PC等は20文字×20行＝400字詰め、スマホは横10文字×40行。WHITEの詩はどちらの組でも自動で2枚に収まります。";
+route();
+build();
+play();
+</script>
+</body>
+</html>
